@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FullCalendar with Events</title>
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <!-- Moment.js for date manipulation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* header Style */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin-bottom: 1rem;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 1rem;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #3498db;
+        }
+
+        /* Custom Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            margin: 10px 0;
+        }
+
+        .modal-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .modal-content ul li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <!-- Navigation links -->
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="addevents.html">Add Event</a></li>
+                <li><a href="index.html#attendees">Attendees</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h2>Event Calendar</h2>
+    <!-- Calendar Container -->
+    <div id="calendar"></div>
+
+    <!-- Custom Modal for Event Details -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-event-title"></h2>
+            <p id="modal-event-date"><i class="fas fa-calendar-alt"></i> <span></span></p>
+            <p id="modal-event-start-time"><i class="fas fa-clock"></i> <span></span></p>
+            <p id="modal-event-end-time"><i class="fas fa-clock"></i> <span></span></p>
+            <p id="modal-event-location"><i class="fas fa-map-marker-alt"></i> <span></span></p>
+            <p id="modal-event-description"><i class="fas fa-info-circle"></i> <span></span></p>
+            <p id="modal-event-category"><i class="fas fa-tags"></i> <span></span></p>
+            <p id="modal-event-amount"><i class="fas fa-money-bill-wave"></i> <span></span></p>
+            <h3><i class="fas fa-users"></i></h3>
+            <ul id="modal-attendee-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        function convertTo12HourFormat(time) {
+            let [hours, minutes] = time.split(':');
+            hours = parseInt(hours);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert '0' or '12' to '12'
+            return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
+        }
+
+        function loadAttendeesFromLocalStorage() {
+            return JSON.parse(localStorage.getItem('Attendees')) || [];
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let calendarEl = document.getElementById("calendar");
+
+            // Load events from local storage
+            let storedEvents = JSON.parse(localStorage.getItem('CalendarEvents')) || [];
+            let calendarEvents = storedEvents.map(event => ({
+                title: event.title,
+                start: moment(event.start).local().format(),
+                end: event.end ? moment(event.end).local().format() : null,
+                description: event.description,
+                location: event.location,
+                category: event.category,
+                amount: event.amount,
+                currency: event.currency
+            }));
+
+            // Load attendees from local storage
+            let storedAttendees = loadAttendeesFromLocalStorage();
+
+            // Initialize FullCalendar
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: "dayGridMonth", // Default view
+                timeZone: 'local',
+                eventTimeFormat: { 
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false 
+                },
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,timeGridDay"
+                },
+                events: calendarEvents,
+                eventClick: function (info) {
+                    let eventStart = info.event.start ? moment(info.event.start).local().format('YYYY-MM-DD') : "No start date";
+                    let eventStartTime = info.event.start ? moment(info.event.start).local().format('HH:mm') : "No start time";
+                    let eventEnd = info.event.end ? moment(info.event.end).local().format('YYYY-MM-DD') : "No end date";
+                    let eventEndTime = info.event.end ? moment(info.event.end).local().format('HH:mm') : "No end time";
+
+                    // Convert times to 12-hour format
+                    let formattedStartTime = convertTo12HourFormat(eventStartTime);
+                    let formattedEndTime = convertTo12HourFormat(eventEndTime);
+
+                    // Set event details in the modal
+                    document.getElementById('modal-event-title').textContent = `Event: ${info.event.title}`;
+                    document.getElementById('modal-event-date').querySelector('span').textContent = `${eventStart}`;
+                    document.getElementById('modal-event-start-time').querySelector('span').textContent = `${formattedStartTime}`;
+                    document.getElementById('modal-event-end-time').querySelector('span').textContent = `${formattedEndTime}`;
+                    document.getElementById('modal-event-location').querySelector('span').textContent = `${info.event.extendedProps.location}`;
+                    document.getElementById('modal-event-description').querySelector('span').textContent = `${info.event.extendedProps.description}`;
+                    document.getElementById('modal-event-category').querySelector('span').textContent = `${info.event.extendedProps.category}`;
+                    if (info.event.extendedProps.amount && info.event.extendedProps.currency) {
+                        document.getElementById('modal-event-amount').querySelector('span').textContent = `${info.event.extendedProps.amount} ${info.event.extendedProps.currency}`;
+                    } else {
+                        document.getElementById('modal-event-amount').querySelector('span').textContent = 'No money needed';
+                    }
+
+                    // Add attendees to the modal
+                    let eventAttendees = storedAttendees.filter(attendee => attendee.event === info.event.title);
+                    let attendeeList = document.getElementById('modal-attendee-list');
+                    attendeeList.innerHTML = ''; // Clear existing attendees
+                    if (eventAttendees.length > 0) {
+                        eventAttendees.forEach(attendee => {
+                            let attendeeItem = document.createElement('li');
+                            attendeeItem.innerHTML = `<i class="fas fa-user"></i> ${attendee.name} (${attendee.email})`;
+                            attendeeList.appendChild(attendeeItem);
+                        });
+                    }
+
+                    // Show the modal
+                    let modal = document.getElementById('event-modal');
+                    modal.style.display = 'block';
+                }
+            });
+
+            calendar.render(); // Render the calendar
+
+            // Close the modal when the close button is clicked
+            document.querySelector('.close-modal').addEventListener('click', function () {
+                document.getElementById('event-modal').style.display = 'none';
+            });
+
+            // Close the modal when clicking outside of it
+            window.addEventListener('click', function (event) {
+                let modal = document.getElementById('event-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

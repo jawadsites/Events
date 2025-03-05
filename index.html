@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Event Management Dashboard</title>
+
+    <script src="https://kit.fontawesome.com/abc4a3be9f.js" crossorigin="anonymous"></script>    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link to external JavaScript file -->
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Smart Event Management Dashboard</h1>
+        <nav>
+            <ul>
+                <!-- Navigation links -->
+                <li><a href="#events">Events</a></li>
+                <li><a href="addevents.html">Add Event</a></li>
+                <li><a href="#attendees">Attendees</a></li>
+                <li><a href="celender.html">Calendar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Section for search and filter options -->
+        <section id="search-filter">
+            <div class="filters">
+                <!-- Filter buttons for different event categories -->
+                <button class="filter-btn" data-category="all">All</button>
+                <button class="filter-btn" data-category="workshop">Workshops</button>
+                <button class="filter-btn" data-category="conference">Conferences</button>
+                <button class="filter-btn" data-category="party">Parties</button>
+            </div>
+        </section>
+
+        <!-- Section for displaying upcoming events -->
+        <section id="events">
+            <h2>Upcoming Events</h2>
+            <div class="event-grid" id="event-grid">
+                <!-- Events will be dynamically populated here -->
+            </div>
+        </section>
+
+        <!-- Modal for displaying event details -->
+        <section id="event-details" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="event-title"></h2>
+                <p id="event-date"></p>
+                <p id="event-location"></p>
+                <p id="event-description"></p>
+                <h4 id="weather-start-tilte"></h4>
+                <div id="event-weather-start"></div>
+                <h4 id="weather-end-tilte"></h4>
+                <div id="event-weather-end"></div>
+                <h3>Attendees</h3>
+                <ul id="attendee-list"></ul>
+                <button id="add-to-calendar">Add to Calendar</button>
+            </div>
+        </section>
+
+        <!-- Section for managing attendees -->
+        <section id="attendees">
+            <h2>Attendee Management</h2>
+            <form id="attendee-form">
+                <label for="attendee-name">Name:</label>
+                <input type="text" id="attendee-name" required>
+
+                <label for="attendee-email">Email:</label>
+                <input type="email" id="attendee-email" required>
+
+                <label for="attendee-event">Event:</label>
+                <select id="attendee-event" required>
+                    <!-- Event options will be dynamically populated here -->
+                </select>
+
+                <button type="submit">Add Attendee</button>
+            </form>
+            <div id="attendee-list-container">
+                <!-- Attendee list will be dynamically populated here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Smart Event Management Dashboard</p>
+    </footer>
+</body>
+</html>

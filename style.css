@@ -1,0 +1,341 @@
+:root {
+  --white: #fff;
+  --backcolor: #ecf0f1;
+  --backcolor1:#2c3e50;
+  --hovercolor: #3498db;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+/* Header styles */
+header {
+  background-color: var(--backcolor1);
+  color: var(--backcolor);
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  margin-bottom: 1rem;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+}
+
+nav ul li {
+  margin-right: 1rem;
+}
+
+nav ul li a {
+  color: var(--backcolor);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: var(--hovercolor);
+}
+
+/* Main content styles */
+main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+section {
+  background-color: var(--white);
+  border-radius: 5px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  color: var(--backcolor1);
+}
+
+/*   filter styles */
+#search-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  background-color: var(--backcolor);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background-color: var(--hovercolor);
+  color: var(--white);
+}
+
+/* Event grid styles */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.event-card {
+  background-color: var(--white);
+  border-radius: 5px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--backcolor1);
+}
+
+.event-card p {
+  margin-bottom: 0.5rem;
+}
+
+.weather-icon {
+    margin-right: 0.5rem;
+}
+
+.weather-widget {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  border: #aaa;
+  background-color: #00000061;
+  width: 10rem;
+  border-style: groove;
+  border-radius: 2px;
+  border-width: 1px;
+  color: #ececec;
+}
+ 
+.attendee-details-item{
+  border: #333;
+  border-radius: 7px;
+  border-style: outset;
+  background-color:#c4fceaa2 ;
+  border-width: 2px;
+  width:max-content ;
+}
+
+.view-details {
+  background-color: var(--hovercolor);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.view-details:hover {
+  background-color: #2980b9;
+}
+
+/* Style for the "Add to Calendar" button */
+#add-to-calendar {
+  background-color: #002a328e; /* Blue background */
+  color: rgb(48, 41, 41); /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition */
+  display: inline-block; /* Inline block for margin */
+  margin-top: 20px; /* Top margin */
+}
+
+#add-to-calendar:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}
+
+#add-to-calendar:active {
+  background-color: #1c5985; /* Even darker blue on click */
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: var(--white);
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 5px;
+  max-width: 600px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Form styles */
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button[type="submit"] {
+  background-color: #2ecc71;
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #27ae60;
+}
+
+/* Attendee list styles */
+#attendee-list-container {
+  margin-top: 2rem;
+}
+
+.attendee-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+/* Footer styles */
+footer {
+  background-color: var(--backcolor1);
+  color: var(--backcolor);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  nav ul {
+      flex-direction: column;
+  }
+
+  nav ul li {
+      margin-bottom: 0.5rem;
+  }
+
+  .event-grid {
+      grid-template-columns: 1fr;
+  }
+
+  #search-filter {
+      flex-direction: column;
+  }
+
+  .filters {
+      flex-wrap: wrap;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.event-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Transitions */
+.view-details, .filter-btn, nav ul li a {
+  transition: all 0.3s ease;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus styles for better accessibility */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--hovercolor);
+  outline-offset: 2px;
+}
