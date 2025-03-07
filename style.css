@@ -133,7 +133,7 @@ h2 {
 .weather-widget {
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
   border: #aaa;
   background-color: #0074e861;
@@ -162,6 +162,7 @@ h2 {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 1rem;
+
 }
 
 .view-details:hover {
@@ -179,7 +180,7 @@ h2 {
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Smooth transition */
   display: inline-block; /* Inline block for margin */
-  margin-top: 20px; /* Top margin */
+  margin-top: 10px; /* Top margin */
 }
 
 #add-to-calendar:hover {
@@ -199,12 +200,13 @@ h2 {
   top: 0;
   width: 100%;
   height: 100%;
+  overflow: auto;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
   background-color: var(--white);
-  margin: 5% auto;
+  margin: -1rem auto;
   padding: 2rem;
   border-radius: 5px;
   max-width: 600px;
