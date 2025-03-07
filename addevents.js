@@ -25,19 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
             // Fetch the currency based on the country name
             countryName(country, (countryName) => {
-            fetchCurrencyByCountry(countryName, (currency) => {
-                newEvent.currency = currency;
-            });
-        });
-                // Save the event after fetching the currency
-                saveEvent(newEvent);
+                fetchCurrencyByCountry(countryName, (currency) => {
+                    newEvent.currency = currency;
+                        // Save the event after fetching the currency and converting the amount
+                        saveEvent(newEvent);
+                    });
+                });
         } else {
             // Save the event directly if no currency is needed
             saveEvent(newEvent);
         }
-    }
-)}
-)
+    });
+});
+
 function saveEvent(newEvent) {
     let events = JSON.parse(localStorage.getItem('Events')) || [];
     const existingEvent = events.findIndex((event) => event.title === newEvent.title);
@@ -79,5 +79,22 @@ function countryName(city, callback) {
         .catch(error => {
             console.error('Error fetching country name:', error);
             alert('Error fetching country name. Please try again later.');
+        });
+}
+
+function convertCurrency(amount, fromCurrency, toCurrency, callback) {
+    const apiKey = '2ebd6623f7d0c91337fb402a';
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${fromCurrency}/${toCurrency}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const conversionRate = data.conversion_rate;
+            const convertedAmount = amount * conversionRate;
+            callback(convertedAmount);
+        })
+        .catch(error => {
+            console.error('Error converting currency:', error);
+            alert('Error converting currency. Please try again later.');
         });
 }
