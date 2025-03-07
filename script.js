@@ -229,24 +229,33 @@ function showEventDetails(event) {
 
     const eventDate = document.getElementById('event-date');
     eventDate.innerHTML = ''; // Clear any existing content
+    const dateTitle = document.createElement('h3');
+    dateTitle.textContent = 'Date:';
     const dateIcon = document.createElement('i');
     dateIcon.classList.add('fas', 'fa-calendar-alt'); // Add icon class
+    eventDate.appendChild(dateTitle);
     eventDate.appendChild(dateIcon);
-    eventDate.appendChild(document.createTextNode(` Date: ${event.date}`));
+    eventDate.appendChild(document.createTextNode(` ${event.date}`));
 
     const eventLocation = document.getElementById('event-location');
     eventLocation.innerHTML = ''; // Clear any existing content
+    const locationTitle = document.createElement('h3');
+    locationTitle.textContent = 'Location:';
     const locationIcon = document.createElement('i');
     locationIcon.classList.add('fas', 'fa-map-marker-alt'); // Add icon class
+    eventLocation.appendChild(locationTitle);
     eventLocation.appendChild(locationIcon);
-    eventLocation.appendChild(document.createTextNode(` Location: ${event.location}`));
+    eventLocation.appendChild(document.createTextNode(` ${event.location}`));
 
     const eventDescription = document.getElementById('event-description');
     eventDescription.innerHTML = ''; // Clear any existing content
+    const descriptionTitle = document.createElement('h3');
+    descriptionTitle.textContent = 'Description:';
     const descriptionIcon = document.createElement('i');
     descriptionIcon.classList.add('fas', 'fa-info-circle'); // Add icon class
+    eventDescription.appendChild(descriptionTitle);
     eventDescription.appendChild(descriptionIcon);
-    eventDescription.appendChild(document.createTextNode(` Description: ${event.description}`));
+    eventDescription.appendChild(document.createTextNode(` ${event.description}`));
     
     document.getElementById('weather-start-tilte').textContent = 'Weather at start time:';
     document.getElementById('weather-end-tilte').textContent = 'Weather at end time:';
@@ -331,6 +340,20 @@ window.addEventListener('click', (e) => {
 // Event listener to add the selected event to the calendar
 addToCalendarBtn.addEventListener('click', () => {
     if (selectedEvent) {
+        // Extract the start and end times
+        const startTime = selectedEvent.sttime;
+        const endTime = selectedEvent.Endtime;
+
+        // Check if the start time is greater than the end time
+        if (startTime > endTime) {
+            // Add one day to the end date
+            const endDate = new Date(selectedEvent.date);
+            endDate.setDate(endDate.getDate() + 1);
+            selectedEvent.endDate = endDate.toISOString().split('T')[0];
+        } else {
+            selectedEvent.endDate = selectedEvent.date;
+        }
+
         if (selectedEvent.currency) {
             // Fetch the country name based on the event location
             countryName(selectedEvent.location, (country) => {
@@ -341,7 +364,7 @@ addToCalendarBtn.addEventListener('click', () => {
                         calendarEvents.push({
                             title: selectedEvent.title,
                             start: selectedEvent.date + 'T' + selectedEvent.sttime,
-                            end: selectedEvent.date + 'T' + selectedEvent.Endtime, // Ensure end time is correctly set
+                            end: selectedEvent.endDate + 'T' + selectedEvent.Endtime, // Ensure end time is correctly set
                             description: selectedEvent.description,
                             location: selectedEvent.location,
                             category: selectedEvent.category,
@@ -358,7 +381,7 @@ addToCalendarBtn.addEventListener('click', () => {
             calendarEvents.push({
                 title: selectedEvent.title,
                 start: selectedEvent.date + 'T' + selectedEvent.sttime,
-                end: selectedEvent.date + 'T' + selectedEvent.Endtime, // Ensure end time is correctly set
+                end: selectedEvent.endDate + 'T' + selectedEvent.Endtime, // Ensure end time is correctly set
                 description: selectedEvent.description,
                 location: selectedEvent.location,
                 category: selectedEvent.category,
@@ -370,3 +393,49 @@ addToCalendarBtn.addEventListener('click', () => {
         }
     }
 });
+// Function to convert currency using an API
+function fetchCurrencyByCountry(country, callback) {
+    const url = `https://restcountries.com/v3.1/name/${country}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const currency = Object.keys(data[0].currencies)[0];
+            callback(currency);
+        })
+        .catch(error => {
+            console.error('Error fetching currency:', error);
+            alert('Error fetching currency. Please try again later.');
+        });
+}
+// Function to convert currency using an country name
+function countryName(city, callback) {
+    const url = `http://api.geonames.org/searchJSON?q=${city}&style=LONG&lang=en&username=location554`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const countryName = data.geonames[0].countryName;
+            callback(countryName);
+        })
+        .catch(error => {
+            console.error('Error fetching country name:', error);
+            alert('Error fetching country name. Please try again later.');
+        });
+}
+function convertCurrency(amount, fromCurrency, toCurrency, callback) {
+    const apiKey = '2ebd6623f7d0c91337fb402a';
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${fromCurrency}/${toCurrency}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const conversionRate = data.conversion_rate;
+            const convertedAmount = amount * conversionRate;
+            callback(convertedAmount);
+        })
+        .catch(error => {
+            console.error('Error converting currency:', error);
+            alert('Error converting currency. Please try again later.');
+        });
+}
