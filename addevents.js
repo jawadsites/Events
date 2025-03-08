@@ -82,19 +82,3 @@ function countryName(city, callback) {
         });
 }
 
-function convertCurrency(amount, fromCurrency, toCurrency, callback) {
-    const apiKey = '2ebd6623f7d0c91337fb402a';
-    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${fromCurrency}/${toCurrency}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const conversionRate = data.conversion_rate;
-            const convertedAmount = amount * conversionRate;
-            callback(convertedAmount);
-        })
-        .catch(error => {
-            console.error('Error converting currency:', error);
-            alert('Error converting currency. Please try again later.');
-        });
-}
