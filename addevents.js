@@ -68,7 +68,7 @@ function fetchCurrencyByCountry(country, callback) {
 }
 
 function countryName(city, callback) {
-    const url = `http://api.geonames.org/searchJSON?q=${city}&style=LONG&lang=en&username=location554`;
+    const url = `https://api.geonames.org/searchJSON?q=${city}&style=LONG&lang=en&username=location554`;
 
     fetch(url)
         .then(response => response.json())
