@@ -45,15 +45,14 @@ The OpenWeatherMap API is used to fetch weather information for the event locati
   - `units`: Units of measurement (metric)
   - `appid`: API key
 
-3. **GeoNames API**:
-The GeoNames API is used to fetch the country name based on the city name provided by the user.
 
-**Endpoint**: `http://api.geonames.org/searchJSON`
-- **Parameters**:
-- `q`: City name
-- `style`: Response style (LONG)
-- `lang`: Language (en)
-- `username`: API username
+
+3.  **RestCountries API**
+
+The RestCountries API is used to fetch the country name based on the country code obtained from the OpenWeatherMap API.
+
+Example API request:
+`https://restcountries.com/v3.1/alpha/{COUNTRY_CODE}`
 
 4. **ExchangeRate-API**:
 The ExchangeRate-API is used to fetch currency conversion rates based on the event location.
@@ -69,6 +68,12 @@ The RestCountries API is used to fetch the currency based on the country name.
 **Endpoint**:` https://restcountries.com/v3.1/name`
 - **Parameters**:
    - `country`: Country name
+6. **OpenWeatherMap API**:
+The OpenWeatherMap API is used to fetch the country code based on the city name provided in the event location.
+
+Example API request:
+`https://api.openweathermap.org/geo/1.0/direct?q={CITY_NAME}&limit=1&appid={YOUR_API_KEY}`
+
 
 ### Font Awesome
 
