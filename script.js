@@ -408,20 +408,40 @@ function fetchCurrencyByCountry(country, callback) {
             alert('Error fetching currency. Please try again later.');
         });
 }
-// Function to convert currency using an country name
+// Function to fetch the country name based on the city name
 function countryName(city, callback) {
-    const url = `http://api.geonames.org/searchJSON?q=${city}&style=LONG&lang=en&username=location554`;
+    const apiKey = '4ddd2d11361bd60eb7a9f367d86a277f';
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            const countryName = data.geonames[0].countryName;
-            callback(countryName);
-        })
+            if (data && data.length > 0) {
+                const countryCode = data[0].country;
+                const countryUrl = `https://restcountries.com/v3.1/alpha/${countryCode}`;
+
+                fetch(countryUrl)
+                    .then(response => response.json())
+                    .then(countryData => {
+                        if (countryData && countryData.length > 0) {
+                            const countryName = countryData[0].name.common;
+                            callback(countryName);
+                        } else {
+                            throw new Error('Country name not found');
+                        }
+                    })
         .catch(error => {
             console.error('Error fetching country name:', error);
             alert('Error fetching country name. Please try again later.');
         });
+} else {
+    throw new Error('Country code not found');
+}
+})
+.catch(error => {
+console.error('Error fetching country code:', error);
+alert('Error fetching country code. Please try again later.');
+});
 }
 function convertCurrency(amount, fromCurrency, toCurrency, callback) {
     const apiKey = '2ebd6623f7d0c91337fb402a';
