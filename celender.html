@@ -139,13 +139,16 @@
     </div>
 
     <script>
-        function convertTo12HourFormat(time) {
-            let [hours, minutes] = time.split(':');
-            hours = parseInt(hours);
-            const period = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12; // Convert '0' or '12' to '12'
-            return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
-        }
+function convertTo12HourFormat(time) {
+    if (!time) {
+        return "Invalid time";
+    }
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Convert '0' or '12' to '12'
+    return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
 
         function loadAttendeesFromLocalStorage() {
             return JSON.parse(localStorage.getItem('Attendees')) || [];
